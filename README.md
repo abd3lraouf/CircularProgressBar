@@ -7,7 +7,7 @@ CircularProgressBar
 
 [![Platform](https://img.shields.io/badge/platform-android-green.svg)](http://developer.android.com/index.html)
 [![API](https://img.shields.io/badge/API-14%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=14)
-[![Download](https://api.bintray.com/packages/lopspower/maven/com.mikhaellopez:circularprogressbar/images/download.svg?version=3.0.3)](https://bintray.com/lopspower/maven/com.mikhaellopez:circularprogressbar/3.0.3/link)
+[![Download](https://api.bintray.com/packages/abdelraoufsabri/maven/me.abdelraoufsabri:circularprogressbar/images/download.svg?version=1.0.0)](https://bintray.com/abdelraoufsabri/maven/me.abdelraoufsabri:circularprogressbar/1.0.0/link)
 <br>
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1f1cf02d760848af8c6b63e7bb0a1db8)](https://app.codacy.com/app/AbdElraoufSabri/CircularProgressBar?utm_source=github.com&utm_medium=referral&utm_content=AbdElraoufSabri/CircularProgressBar&utm_campaign=Badge_Grade_Dashboard)
 
@@ -186,5 +186,4 @@ LICENCE
 -----
 
 CircularProgressBar by [AbdElraouf Sabri](https://abdelraoufsabri.me) is licensed under a [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
-CircularProgressBar by [Lopez Mikhael](http://mikhaellopez.com/) is licensed under a [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 Based on a work at [lopspower/CircularProgressBar](https://github.com/lopspower/CircularProgressBar).
