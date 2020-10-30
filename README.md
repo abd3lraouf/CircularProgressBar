@@ -9,14 +9,9 @@ CircularProgressBar
 [![API](https://img.shields.io/badge/API-14%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=14)
 [![Download](https://api.bintray.com/packages/lopspower/maven/com.mikhaellopez:circularprogressbar/images/download.svg?version=3.0.3)](https://bintray.com/lopspower/maven/com.mikhaellopez:circularprogressbar/3.0.3/link)
 <br>
-[![Twitter](https://img.shields.io/badge/Twitter-@LopezMikhael-blue.svg?style=flat)](http://twitter.com/lopezmikhael)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1f1cf02d760848af8c6b63e7bb0a1db8)](https://app.codacy.com/app/lopspower/CircularProgressBar?utm_source=github.com&utm_medium=referral&utm_content=lopspower/CircularProgressBar&utm_campaign=Badge_Grade_Dashboard)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1f1cf02d760848af8c6b63e7bb0a1db8)](https://app.codacy.com/app/AbdElraoufSabri/CircularProgressBar?utm_source=github.com&utm_medium=referral&utm_content=AbdElraoufSabri/CircularProgressBar&utm_campaign=Badge_Grade_Dashboard)
 
 This is an Android project allowing to realize a circular ProgressBar in the simplest way possible.
-
-<a href="https://play.google.com/store/apps/details?id=com.mikhaellopez.lopspower">
-  <img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png" />
-</a>
 
 USAGE
 -----
@@ -24,14 +19,14 @@ USAGE
 To make a circular ProgressBar add CircularProgressBar in your layout XML and add CircularProgressBar library in your project or you can also grab it via Gradle:
 
 ```groovy
-implementation 'com.mikhaellopez:circularprogressbar:3.0.3'
+implementation 'me.abdelraoufsabri:circularprogressbar:1.0.0'
 ```
 
 XML
 -----
 
 ```xml
-<com.mikhaellopez.circularprogressbar.CircularProgressBar
+<me.abdelraoufsabri.circularprogressbar.CircularProgressBar
     android:id="@+id/circularProgressBar"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -40,7 +35,10 @@ XML
     app:cpb_progress_direction="to_right"
     app:cpb_progressbar_color="#3f51b5"
     app:cpb_progressbar_width="10dp"
-    app:cpb_round_border="false" />
+    app:cpb_round_border="false"
+    app:cpb_percent_shape="@layout/custom_shape"
+    app:cpb_percent_shape_size="70dp"
+    />
 ```
 
 You must use the following properties in your XML to change your CircularProgressBar.
@@ -63,6 +61,8 @@ You must use the following properties in your XML to change your CircularProgres
 | `app:cpb_round_border`                           | boolean                                                      | false                 |
 | `app:cpb_start_angle`                            | float                                                        | 0f (=top)             |
 | `app:cpb_progress_direction`                     | to_right or to_left                                          | to_right              |
+| `app:cpb_percent_shape`                              | reference                                          | null              |
+| `app:cpb_percent_shape_size`                     | dimension                                          | 25dp              |
 
 KOTLIN
 -----
@@ -100,6 +100,10 @@ circularProgressBar.apply {
     roundBorder = true
     startAngle = 180f
     progressDirection = CircularProgressBar.ProgressDirection.TO_RIGHT
+    
+    // Percent shape
+    percentShapeId = R.layout.custom_layout
+    percentShapeViewSize = 25F
 }
 ```
 
@@ -150,6 +154,11 @@ circularProgressBar.setBackgroundProgressBarWidth(3f); // in DP
 circularProgressBar.setRoundBorder(true);
 circularProgressBar.setStartAngle(180f);
 circularProgressBar.setProgressDirection(CircularProgressBar.ProgressDirection.TO_RIGHT);
+
+// Percent shape
+circularProgressBar.setPercentShapeId = R.layout.custom_layout
+circularProgressBar.setPercentShapeViewSize = 25F
+
 ```
 
 ### Listener (in Java)
@@ -169,12 +178,13 @@ circularProgressBar.setOnIndeterminateModeChangeListener(isEnable -> {
 SUPPORT ❤️
 -----
 
-Find this library useful? Support it by joining [**stargazers**](https://github.com/lopspower/CircularProgressBar/stargazers) for this repository ⭐️
+Find this library useful? Support it by joining [**stargazers**](https://github.com/AbdElraoufSabri/CircularProgressBar/stargazers) for this repository ⭐️
 <br/>
-And [**follow me**](https://github.com/lopspower?tab=followers) for my next creations 👍
+And [**follow me**](https://github.com/AbdElraoufSabri?tab=followers) for my next creations 👍
 
 LICENCE
 -----
 
+CircularProgressBar by [AbdElraouf Sabri](https://abdelraoufsabri.me) is licensed under a [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 CircularProgressBar by [Lopez Mikhael](http://mikhaellopez.com/) is licensed under a [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
-Based on a work at [Pedramrn/CircularProgressBar](https://github.com/Pedramrn/CircularProgressBar).
+Based on a work at [lopspower/CircularProgressBar](https://github.com/lopspower/CircularProgressBar).

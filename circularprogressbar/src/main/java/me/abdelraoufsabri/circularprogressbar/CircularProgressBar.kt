@@ -1,19 +1,23 @@
-package com.mikhaellopez.circularprogressbar
+package me.abdelraoufsabri.circularprogressbar
 
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.*
+import android.graphics.Paint.Style
 import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
-import kotlin.math.min
+import android.view.View.MeasureSpec.EXACTLY
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.view.children
+import kotlin.math.*
 
-/**
- * Copyright (C) 2019 Mikhael LOPEZ
- * Licensed under the Apache License Version 2.0
- */
+
 class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
 
     companion object {
@@ -22,19 +26,23 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
         private const val DEFAULT_ANIMATION_DURATION = 1500L
     }
 
+    private var maxPadding: Int = 0
+    private var highStroke: Float = 0F
+
     // Properties
     private var progressAnimator: ValueAnimator? = null
     private var indeterminateModeHandler: Handler? = null
 
     // View
     private var rectF = RectF()
+    private var endDrawableRectF = RectF()
     private var backgroundPaint: Paint = Paint().apply {
         isAntiAlias = true
-        style = Paint.Style.STROKE
+        style = Style.STROKE
     }
     private var foregroundPaint: Paint = Paint().apply {
         isAntiAlias = true
-        style = Paint.Style.STROKE
+        style = Style.STROKE
     }
 
     //region Attributes
@@ -141,7 +149,7 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
 
             indeterminateModeHandler?.removeCallbacks(indeterminateModeRunnable)
             progressAnimator?.cancel()
-            indeterminateModeHandler = Handler()
+            indeterminateModeHandler = Handler(Looper.getMainLooper())
 
             if (field) {
                 indeterminateModeHandler?.post(indeterminateModeRunnable)
@@ -165,6 +173,41 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
     private var startAngleIndeterminateMode: Float = DEFAULT_START_ANGLE
         set(value) {
             field = value
+            invalidate()
+        }
+    var percentShapeId: Int = 0
+        set(value) {
+            if (value != 0) {
+                field = value
+                percentShapeView = LayoutInflater.from(context).inflate(value, null, false)
+                invalidate()
+            }
+        }
+
+    private var percentShapeView: View? = null
+        set(value) {
+            value?.let {
+                field = value
+                if (value is ViewGroup) {
+                    value.children
+                            .firstOrNull { view -> view is TextView }
+                            .let { textView -> percentTextView = textView as TextView }
+                }
+            }
+        }
+
+    private var percentTextView: TextView? = null
+
+    var percentShapeViewSize: Float = resources.getDimension(R.dimen.default_percent_shape_size)
+        set(value) {
+            field = value.dpToPx()
+            percentShapeView?.let {
+                val spec = MeasureSpec.makeMeasureSpec(percentShapeViewSize.roundToInt(), EXACTLY)
+                it.measure(spec, spec)
+                it.layout(0, 0, it.measuredWidth, it.measuredHeight)
+            }
+
+            requestLayout()
             invalidate()
         }
 
@@ -228,6 +271,10 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
         // Indeterminate Mode
         indeterminateMode = attributes.getBoolean(R.styleable.CircularProgressBar_cpb_indeterminate_mode, indeterminateMode)
 
+        // End Drawable
+        percentShapeId = attributes.getResourceId(R.styleable.CircularProgressBar_cpb_percent_shape, 0)
+        percentShapeViewSize = attributes.getDimension(R.styleable.CircularProgressBar_cpb_percent_shape_size, percentShapeViewSize).pxToDp()
+
         attributes.recycle()
     }
 
@@ -256,6 +303,20 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
         val angle = (if (isToRightFromIndeterminateMode || isToRightFromNormalMode) 360 else -360) * realProgress / 100
 
         canvas.drawArc(rectF, if (indeterminateMode) startAngleIndeterminateMode else startAngle, angle, false, foregroundPaint)
+        percentShapeView?.let {
+            if (!indeterminateMode) {
+                val radius = rectF.width() / 2
+                val halfPercentShape = percentShapeViewSize / 2
+                val x = (radius * cos(Math.toRadians(angle + startAngle * 1.0))).toFloat() - halfPercentShape + rectF.centerX()
+                val y = (radius * sin(Math.toRadians(angle + startAngle * 1.0))).toFloat() - halfPercentShape + rectF.centerY()
+                canvas.save()
+                canvas.translate(x, y)
+                it.draw(canvas)
+                canvas.restore()
+                val text = "${realProgress.toInt()}"
+                percentTextView?.text = text
+            }
+        }
     }
 
     override fun setBackgroundColor(backgroundColor: Int) {
@@ -291,13 +352,29 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
 
     //region Measure Method
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val maxPadding = getMaxPadding(paddingTop, paddingBottom, paddingLeft, paddingRight)
+
+        val highStroke = max(progressBarWidth, backgroundProgressBarWidth)
+        val halfFinal = max(highStroke, percentShapeViewSize) / 2
+
         val height = getDefaultSize(suggestedMinimumHeight, heightMeasureSpec)
         val width = getDefaultSize(suggestedMinimumWidth, widthMeasureSpec)
         val min = min(width, height)
         setMeasuredDimension(min, min)
-        val highStroke = if (progressBarWidth > backgroundProgressBarWidth) progressBarWidth else backgroundProgressBarWidth
-        rectF.set(0 + highStroke / 2, 0 + highStroke / 2, min - highStroke / 2, min - highStroke / 2)
+
+        rectF.set(
+                0 + maxPadding + halfFinal,
+                0 + maxPadding + halfFinal,
+                min - maxPadding - halfFinal,
+                min - maxPadding - halfFinal
+        )
+
     }
+
+    private fun getMaxPadding(paddingTop: Int, paddingBottom: Int, paddingLeft: Int, paddingRight: Int): Int {
+        return max(paddingTop, max(paddingBottom, max(paddingLeft, paddingRight)))
+    }
+
     //endregion
 
     /**
@@ -331,7 +408,6 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
         progressAnimator?.start()
     }
 
-    //region Extensions Utils
     private fun Float.dpToPx(): Float =
             this * Resources.getSystem().displayMetrics.density
 

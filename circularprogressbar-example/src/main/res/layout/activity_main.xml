@@ -5,27 +5,28 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="50dp"
         android:layout_marginRight="50dp"
-        android:layout_weight="1"
         android:gravity="center"
-        android:orientation="vertical">
+        >
 
-        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        <me.abdelraoufsabri.circularprogressbar.CircularProgressBar
             android:id="@+id/circularProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:cpb_background_progressbar_color="#b6bbd8"
             app:cpb_background_progressbar_width="10dp"
+            app:cpb_percent_shape="@layout/custom_layout"
+            app:cpb_percent_shape_size="40dp"
+            android:paddingTop="20dp"
             app:cpb_progress_direction="to_right"
-            app:cpb_progressbar_color="#3f51b5"
-            app:cpb_progressbar_width="20dp" />
-
-    </LinearLayout>
+            app:cpb_progressbar_color="@color/primary"
+            app:cpb_progressbar_width="10dp" />
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="240dp"
@@ -33,6 +34,15 @@
         android:layout_margin="40dp"
         android:gravity="center"
         android:orientation="vertical">
+
+        <SeekBar
+            android:id="@+id/seekBarEndDrawableWidth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:maxHeight="20dp"
+            android:minHeight="20dp"
+            android:progress="40" />
 
         <SeekBar
             android:id="@+id/seekBarProgress"
@@ -57,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:max="70"
-            android:progress="20" />
+            android:progress="10" />
 
         <SeekBar
             android:id="@+id/seekBarBackgroundStrokeWidth"
