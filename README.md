@@ -7,9 +7,9 @@ CircularProgressBar
 
 [![Platform](https://img.shields.io/badge/platform-android-green.svg)](http://developer.android.com/index.html)
 [![API](https://img.shields.io/badge/API-14%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=14)
-[![Download](https://api.bintray.com/packages/abdelraoufsabri/maven/me.abdelraoufsabri:circularprogressbar/images/download.svg?version=1.0.0)](https://bintray.com/abdelraoufsabri/maven/me.abdelraoufsabri:circularprogressbar/1.0.0/link)
+[ ![Download](https://api.bintray.com/packages/abdelraoufsabri/maven/me.abdelraoufsabri%3Acircularprogressbar/images/download.svg) ](https://bintray.com/abdelraoufsabri/maven/me.abdelraoufsabri%3Acircularprogressbar/_latestVersion)
 <br>
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1f1cf02d760848af8c6b63e7bb0a1db8)](https://app.codacy.com/app/AbdElraoufSabri/CircularProgressBar?utm_source=github.com&utm_medium=referral&utm_content=AbdElraoufSabri/CircularProgressBar&utm_campaign=Badge_Grade_Dashboard)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/9d34c146a041409ebef5ff75840bfafa)](https://www.codacy.com/gh/AbdElraoufSabri/CircularProgressBar/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AbdElraoufSabri/CircularProgressBar&amp;utm_campaign=Badge_Grade)
 
 This is an Android project allowing to realize a circular ProgressBar in the simplest way possible.
 
@@ -19,7 +19,7 @@ USAGE
 To make a circular ProgressBar add CircularProgressBar in your layout XML and add CircularProgressBar library in your project or you can also grab it via Gradle:
 
 ```groovy
-implementation 'me.abdelraoufsabri:circularprogressbar:1.0.0'
+implementation 'me.abdelraoufsabri:circularprogressbar:1.0.1'
 ```
 
 XML
@@ -36,6 +36,7 @@ XML
     app:cpb_progressbar_color="#3f51b5"
     app:cpb_progressbar_width="10dp"
     app:cpb_round_border="false"
+    app:cpb_percent_shape_enabled="true"
     app:cpb_percent_shape="@layout/custom_shape"
     app:cpb_percent_shape_size="70dp"
     />
@@ -63,6 +64,7 @@ You must use the following properties in your XML to change your CircularProgres
 | `app:cpb_progress_direction`                     | to_right or to_left                                          | to_right              |
 | `app:cpb_percent_shape`                          | reference                                                    | null                  |
 | `app:cpb_percent_shape_size`                     | dimension                                                    | 25dp                  |
+| `app:cpb_percent_shape_enabled`                  | boolean                                                      | false                 |
 
 KOTLIN
 -----
@@ -104,6 +106,7 @@ circularProgressBar.apply {
     // Percent shape
     percentShapeId = R.layout.custom_layout
     percentShapeViewSize = 25F
+    percentShapeEnabled = true
 }
 ```
 
@@ -156,6 +159,7 @@ circularProgressBar.setStartAngle(180f);
 circularProgressBar.setProgressDirection(CircularProgressBar.ProgressDirection.TO_RIGHT);
 
 // Percent shape
+circularProgressBar.isPercentShapeEnabled = true
 circularProgressBar.setPercentShapeId = R.layout.custom_layout
 circularProgressBar.setPercentShapeViewSize = 25F
 

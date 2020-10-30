@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity() {
         circularProgressBar.setProgressWithAnimation(65f, 1000) // =1s
 
         // Update circularProgressBar
-        seekBarEndDrawableWidth.onProgressChanged { circularProgressBar.percentShapeViewSize = it }
         seekBarProgress.onProgressChanged { circularProgressBar.progress = it }
         seekBarStartAngle.onProgressChanged { circularProgressBar.startAngle = it }
         seekBarStrokeWidth.onProgressChanged { circularProgressBar.progressBarWidth = it }
@@ -40,6 +39,11 @@ class MainActivity : AppCompatActivity() {
         // Indeterminate Mode
         switchIndeterminateMode.onCheckedChange { circularProgressBar.indeterminateMode = it }
         circularProgressBar.onIndeterminateModeChangeListener = { switchIndeterminateMode.isChecked = it }
+
+        // Percent shape Enabled
+        switchPercentShape.onCheckedChange { circularProgressBar.percentShapeEnabled = it }
+        circularProgressBar.onPercentShapeEnabledChangeListener = { switchPercentShape.isChecked = it }
+        seekBarPercentShapeSize.onProgressChanged { circularProgressBar.percentShapeViewSize = it }
     }
 
     //region Extensions

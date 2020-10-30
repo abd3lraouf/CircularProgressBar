@@ -157,6 +157,7 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
         }
     var onProgressChangeListener: ((Float) -> Unit)? = null
     var onIndeterminateModeChangeListener: ((Boolean) -> Unit)? = null
+    var onPercentShapeEnabledChangeListener: ((Boolean) -> Unit)? = null
     //endregion
 
     //region Indeterminate Mode
@@ -182,6 +183,13 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
                 percentShapeView = LayoutInflater.from(context).inflate(value, null, false)
                 invalidate()
             }
+        }
+
+    var percentShapeEnabled: Boolean = false
+        set(value) {
+            field = value
+            onPercentShapeEnabledChangeListener?.invoke(value)
+            invalidate()
         }
 
     private var percentShapeView: View? = null
@@ -274,6 +282,7 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
         // End Drawable
         percentShapeId = attributes.getResourceId(R.styleable.CircularProgressBar_cpb_percent_shape, 0)
         percentShapeViewSize = attributes.getDimension(R.styleable.CircularProgressBar_cpb_percent_shape_size, percentShapeViewSize).pxToDp()
+        percentShapeEnabled = attributes.getBoolean(R.styleable.CircularProgressBar_cpb_percent_shape_enabled, false)
 
         attributes.recycle()
     }
@@ -303,18 +312,20 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
         val angle = (if (isToRightFromIndeterminateMode || isToRightFromNormalMode) 360 else -360) * realProgress / 100
 
         canvas.drawArc(rectF, if (indeterminateMode) startAngleIndeterminateMode else startAngle, angle, false, foregroundPaint)
-        percentShapeView?.let {
-            if (!indeterminateMode) {
-                val radius = rectF.width() / 2
-                val halfPercentShape = percentShapeViewSize / 2
-                val x = (radius * cos(Math.toRadians(angle + startAngle * 1.0))).toFloat() - halfPercentShape + rectF.centerX()
-                val y = (radius * sin(Math.toRadians(angle + startAngle * 1.0))).toFloat() - halfPercentShape + rectF.centerY()
-                canvas.save()
-                canvas.translate(x, y)
-                it.draw(canvas)
-                canvas.restore()
-                val text = "${realProgress.toInt()}"
-                percentTextView?.text = text
+        if (percentShapeEnabled) {
+            percentShapeView?.let {
+                if (!indeterminateMode) {
+                    val radius = rectF.width() / 2
+                    val halfPercentShape = percentShapeViewSize / 2
+                    val x = (radius * cos(Math.toRadians(angle + startAngle * 1.0))).toFloat() - halfPercentShape + rectF.centerX()
+                    val y = (radius * sin(Math.toRadians(angle + startAngle * 1.0))).toFloat() - halfPercentShape + rectF.centerY()
+                    canvas.save()
+                    canvas.translate(x, y)
+                    it.draw(canvas)
+                    canvas.restore()
+                    val text = "${realProgress.toInt()}"
+                    percentTextView?.text = text
+                }
             }
         }
     }
@@ -355,7 +366,8 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
         val maxPadding = getMaxPadding(paddingTop, paddingBottom, paddingLeft, paddingRight)
 
         val highStroke = max(progressBarWidth, backgroundProgressBarWidth)
-        val halfFinal = max(highStroke, percentShapeViewSize) / 2
+        var halfFinal = if (percentShapeEnabled) max(highStroke, percentShapeViewSize) else highStroke
+        halfFinal /= 2
 
         val height = getDefaultSize(suggestedMinimumHeight, heightMeasureSpec)
         val width = getDefaultSize(suggestedMinimumWidth, widthMeasureSpec)
