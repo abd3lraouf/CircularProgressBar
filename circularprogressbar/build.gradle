@@ -78,6 +78,8 @@ bintray {
     user = properties.getProperty("bintray.user")
     key = properties.getProperty("bintray.apikey")
     publications = ['MyPublication']
+    publish = true
+    dryRun = true
     pkg {
         repo = "maven"
         name = "$libGroupId:$libArtifactId"
