@@ -61,8 +61,8 @@ You must use the following properties in your XML to change your CircularProgres
 | `app:cpb_round_border`                           | boolean                                                      | false                 |
 | `app:cpb_start_angle`                            | float                                                        | 0f (=top)             |
 | `app:cpb_progress_direction`                     | to_right or to_left                                          | to_right              |
-| `app:cpb_percent_shape`                              | reference                                          | null              |
-| `app:cpb_percent_shape_size`                     | dimension                                          | 25dp              |
+| `app:cpb_percent_shape`                          | reference                                                    | null                  |
+| `app:cpb_percent_shape_size`                     | dimension                                                    | 25dp                  |
 
 KOTLIN
 -----
