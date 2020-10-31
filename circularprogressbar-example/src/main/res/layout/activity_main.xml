@@ -4,51 +4,42 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical">
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="50dp"
         android:layout_marginRight="50dp"
-        android:gravity="center"
-        >
+        android:gravity="center">
 
         <me.abdelraoufsabri.circularprogressbar.CircularProgressBar
             android:id="@+id/circularProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="20dp"
             app:cpb_background_progressbar_color="#b6bbd8"
             app:cpb_background_progressbar_width="10dp"
             app:cpb_percent_shape="@layout/custom_layout"
             app:cpb_percent_shape_size="40dp"
-            android:paddingTop="20dp"
+            app:cpb_percent_text_view_id="@id/number"
             app:cpb_progress_direction="to_right"
             app:cpb_progressbar_color="@color/primary"
-            app:cpb_progressbar_width="10dp"
-            />
+            app:cpb_progressbar_width="10dp" />
     </FrameLayout>
 
     <ScrollView
-        android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
 
         <LinearLayout
-            android:layout_gravity="center"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="40dp"
             android:gravity="center"
             android:orientation="vertical">
-
-            <SeekBar
-                android:id="@+id/seekBarPercentShapeSize"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="100"
-                android:maxHeight="20dp"
-                android:minHeight="20dp"
-                android:progress="40" />
 
             <SeekBar
                 android:id="@+id/seekBarProgress"
@@ -206,6 +197,16 @@
                     android:layout_height="wrap_content" />
 
             </LinearLayout>
+
+            <SeekBar
+                android:id="@+id/seekBarPercentShapeSize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100"
+                android:maxHeight="20dp"
+                android:minHeight="20dp"
+                android:progress="40"
+                android:visibility="gone" />
 
         </LinearLayout>
 

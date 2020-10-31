@@ -19,7 +19,7 @@ USAGE
 To make a circular ProgressBar add CircularProgressBar in your layout XML and add CircularProgressBar library in your project or you can also grab it via Gradle:
 
 ```groovy
-implementation 'me.abdelraoufsabri:circularprogressbar:1.0.2'
+implementation 'me.abdelraoufsabri:circularprogressbar:1.1.0'
 ```
 
 XML
@@ -30,16 +30,15 @@ XML
     android:id="@+id/circularProgressBar"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:paddingTop="20dp"
     app:cpb_background_progressbar_color="#b6bbd8"
-    app:cpb_background_progressbar_width="5dp"
+    app:cpb_background_progressbar_width="10dp"
+    app:cpb_percent_shape="@layout/custom_layout"
+    app:cpb_percent_shape_size="40dp"
+    app:cpb_percent_text_view_id="@id/number"
     app:cpb_progress_direction="to_right"
-    app:cpb_progressbar_color="#3f51b5"
-    app:cpb_progressbar_width="10dp"
-    app:cpb_round_border="false"
-    app:cpb_percent_shape_enabled="true"
-    app:cpb_percent_shape="@layout/custom_shape"
-    app:cpb_percent_shape_size="70dp"
-    />
+    app:cpb_progressbar_color="@color/primary"
+    app:cpb_progressbar_width="10dp" />
 ```
 
 You must use the following properties in your XML to change your CircularProgressBar.
@@ -62,9 +61,10 @@ You must use the following properties in your XML to change your CircularProgres
 | `app:cpb_round_border`                           | boolean                                                      | false                 |
 | `app:cpb_start_angle`                            | float                                                        | 0f (=top)             |
 | `app:cpb_progress_direction`                     | to_right or to_left                                          | to_right              |
-| `app:cpb_percent_shape`                          | reference                                                    | null                  |
+| `app:cpb_percent_shape`                          | reference                                                    | 0                     |
 | `app:cpb_percent_shape_size`                     | dimension                                                    | 25dp                  |
 | `app:cpb_percent_shape_enabled`                  | boolean                                                      | false                 |
+| `app:cpb_percent_text_view_id`                   | reference                                                    | 0                     |
 
 KOTLIN
 -----
@@ -105,6 +105,7 @@ circularProgressBar.apply {
     
     // Percent shape
     percentShapeId = R.layout.custom_layout
+    percentTextViewId = R.id.number
     percentShapeViewSize = 25F
     percentShapeEnabled = true
 }
@@ -113,13 +114,18 @@ circularProgressBar.apply {
 ### Listener (in Kotlin)
 
 ```kotlin
-circularProgressBar.onProgressChangeListener = { progress ->
+circularProgressBar.progressChangeListeners.add{ progress ->
     // Do something
 }
 
-circularProgressBar.onIndeterminateModeChangeListener = { isEnable ->
+circularProgressBar.indeterminateModeChangeListeners.add{ isEnable ->
     // Do something
 }
+
+circularProgressBar.percentShapeEnabledChangeListeners.add{ isEnable ->
+    // Do something
+}
+
 ```
 
 JAVA
@@ -159,21 +165,24 @@ circularProgressBar.setStartAngle(180f);
 circularProgressBar.setProgressDirection(CircularProgressBar.ProgressDirection.TO_RIGHT);
 
 // Percent shape
-circularProgressBar.isPercentShapeEnabled = true
-circularProgressBar.setPercentShapeId = R.layout.custom_layout
-circularProgressBar.setPercentShapeViewSize = 25F
-
+circularProgressBar.setPercentShapeEnabled(true);
+circularProgressBar.setPercentShapeId(R.layout.custom_layout)
+circularProgressBar.setPercentTextViewId(R.id.number)
+circularProgressBar.setPercentShapeViewSize(25F)
 ```
 
 ### Listener (in Java)
 
 ```java
-circularProgressBar.setOnIndeterminateModeChangeListener(isEnable -> {
+circularProgressBar.getProgressChangeListeners().add( progress -> {
     // Do something
     return Unit.INSTANCE;
 });
-
- circularProgressBar.setOnProgressChangeListener(progress -> {
+        circularProgressBar.getIndeterminateModeChangeListeners().add( isEnabled -> {
+    // Do something
+    return Unit.INSTANCE;
+});
+        circularProgressBar.getPercentShapeEnabledChangeListeners().add( isEnabled -> {
     // Do something
     return Unit.INSTANCE;
 });

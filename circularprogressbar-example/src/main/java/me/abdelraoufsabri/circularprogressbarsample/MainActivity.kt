@@ -2,13 +2,15 @@ package me.abdelraoufsabri.circularprogressbarsample
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.larswerkman.lobsterpicker.OnColorListener
 import com.larswerkman.lobsterpicker.sliders.LobsterShadeSlider
-import me.abdelraoufsabri.circularprogressbar.CircularProgressBar
 import kotlinx.android.synthetic.main.activity_main.*
+import me.abdelraoufsabri.circularprogressbar.CircularProgressBar
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
@@ -38,11 +40,14 @@ class MainActivity : AppCompatActivity() {
 
         // Indeterminate Mode
         switchIndeterminateMode.onCheckedChange { circularProgressBar.indeterminateMode = it }
-        circularProgressBar.onIndeterminateModeChangeListener = { switchIndeterminateMode.isChecked = it }
+        circularProgressBar.indeterminateModeChangeListeners.add { switchIndeterminateMode.isChecked = it }
 
         // Percent shape Enabled
-        switchPercentShape.onCheckedChange { circularProgressBar.percentShapeEnabled = it }
-        circularProgressBar.onPercentShapeEnabledChangeListener = { switchPercentShape.isChecked = it }
+        switchPercentShape.onCheckedChange {
+            circularProgressBar.percentShapeEnabled = it
+            seekBarPercentShapeSize.visibility = if (it) VISIBLE else GONE
+        }
+        circularProgressBar.percentShapeEnabledChangeListeners.add { switchPercentShape.isChecked = it }
         seekBarPercentShapeSize.onProgressChanged { circularProgressBar.percentShapeViewSize = it }
     }
 

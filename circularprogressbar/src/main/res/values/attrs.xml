@@ -30,6 +30,7 @@
             <flag name="to_left" value="2" />
         </attr>
         <attr name="cpb_percent_shape" format="reference"/>
+        <attr name="cpb_percent_text_view_id" format="reference"/>
         <attr name="cpb_percent_shape_size" format="dimension" />
         <attr name="cpb_percent_shape_enabled" format="boolean" />
     </declare-styleable>

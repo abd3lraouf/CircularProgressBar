@@ -12,9 +12,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.MeasureSpec.EXACTLY
-import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.view.children
 import kotlin.math.*
 
 
@@ -26,16 +24,12 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
         private const val DEFAULT_ANIMATION_DURATION = 1500L
     }
 
-    private var maxPadding: Int = 0
-    private var highStroke: Float = 0F
-
     // Properties
     private var progressAnimator: ValueAnimator? = null
     private var indeterminateModeHandler: Handler? = null
 
     // View
     private var rectF = RectF()
-    private var endDrawableRectF = RectF()
     private var backgroundPaint: Paint = Paint().apply {
         isAntiAlias = true
         style = Style.STROKE
@@ -49,7 +43,7 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
     var progress: Float = 0f
         set(value) {
             field = if (progress <= progressMax) value else progressMax
-            onProgressChangeListener?.invoke(progress)
+            progressChangeListeners.forEach { it.invoke(field) }
             invalidate()
         }
     var progressMax: Float = DEFAULT_MAX_VALUE
@@ -142,7 +136,7 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
     var indeterminateMode = false
         set(value) {
             field = value
-            onIndeterminateModeChangeListener?.invoke(field)
+            indeterminateModeChangeListeners.forEach { it.invoke(field) }
             progressIndeterminateMode = 0f
             progressDirectionIndeterminateMode = ProgressDirection.TO_RIGHT
             startAngleIndeterminateMode = DEFAULT_START_ANGLE
@@ -155,9 +149,9 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
                 indeterminateModeHandler?.post(indeterminateModeRunnable)
             }
         }
-    var onProgressChangeListener: ((Float) -> Unit)? = null
-    var onIndeterminateModeChangeListener: ((Boolean) -> Unit)? = null
-    var onPercentShapeEnabledChangeListener: ((Boolean) -> Unit)? = null
+    val progressChangeListeners: MutableList<(Float) -> Unit> = mutableListOf()
+    val indeterminateModeChangeListeners: MutableList<(Boolean) -> Unit> = mutableListOf()
+    val percentShapeEnabledChangeListeners: MutableList<(Boolean) -> Unit> = mutableListOf()
     //endregion
 
     //region Indeterminate Mode
@@ -176,6 +170,16 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
             field = value
             invalidate()
         }
+    var percentTextViewId: Int = 0
+        set(value) {
+            if (value != 0) {
+                percentShapeView?.let {
+                    field = value
+                    percentTextView = it.findViewById(value)
+                    invalidate()
+                }
+            }
+        }
     var percentShapeId: Int = 0
         set(value) {
             if (value != 0) {
@@ -188,33 +192,22 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
     var percentShapeEnabled: Boolean = false
         set(value) {
             field = value
-            onPercentShapeEnabledChangeListener?.invoke(value)
+            percentShapeEnabledChangeListeners.forEach { it.invoke(field) }
             invalidate()
         }
 
     private var percentShapeView: View? = null
-        set(value) {
-            value?.let {
-                field = value
-                if (value is ViewGroup) {
-                    value.children
-                            .firstOrNull { view -> view is TextView }
-                            .let { textView -> percentTextView = textView as TextView }
-                }
-            }
-        }
 
     private var percentTextView: TextView? = null
 
     var percentShapeViewSize: Float = resources.getDimension(R.dimen.default_percent_shape_size)
         set(value) {
             field = value.dpToPx()
-            percentShapeView?.let {
+            percentShapeView?.let { view ->
                 val spec = MeasureSpec.makeMeasureSpec(percentShapeViewSize.roundToInt(), EXACTLY)
-                it.measure(spec, spec)
-                it.layout(0, 0, it.measuredWidth, it.measuredHeight)
+                view.measure(spec, spec)
+                view.layout(0, 0, view.measuredWidth, view.measuredHeight)
             }
-
             requestLayout()
             invalidate()
         }
@@ -279,10 +272,20 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
         // Indeterminate Mode
         indeterminateMode = attributes.getBoolean(R.styleable.CircularProgressBar_cpb_indeterminate_mode, indeterminateMode)
 
-        // End Drawable
+        // Percent View
+        percentShapeEnabled = attributes.getBoolean(R.styleable.CircularProgressBar_cpb_percent_shape_enabled, false)
         percentShapeId = attributes.getResourceId(R.styleable.CircularProgressBar_cpb_percent_shape, 0)
         percentShapeViewSize = attributes.getDimension(R.styleable.CircularProgressBar_cpb_percent_shape_size, percentShapeViewSize).pxToDp()
-        percentShapeEnabled = attributes.getBoolean(R.styleable.CircularProgressBar_cpb_percent_shape_enabled, false)
+        percentTextViewId = attributes.getResourceId(R.styleable.CircularProgressBar_cpb_percent_text_view_id, 0)
+
+        progressChangeListeners.add{
+            percentTextView?.text = it.toInt().toString()
+            percentShapeView?.let { view ->
+                val spec = MeasureSpec.makeMeasureSpec(percentShapeViewSize.roundToInt(), EXACTLY)
+                view.measure(spec, spec)
+                view.layout(0, 0, view.measuredWidth, view.measuredHeight)
+            }
+        }
 
         attributes.recycle()
     }
@@ -323,8 +326,6 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
                     canvas.translate(x, y)
                     it.draw(canvas)
                     canvas.restore()
-                    val text = "${realProgress.toInt()}"
-                    percentTextView?.text = text
                 }
             }
         }
