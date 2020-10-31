@@ -19,7 +19,7 @@ USAGE
 To make a circular ProgressBar add CircularProgressBar in your layout XML and add CircularProgressBar library in your project or you can also grab it via Gradle:
 
 ```groovy
-implementation 'me.abdelraoufsabri:circularprogressbar:1.1.0'
+implementation 'me.abdelraoufsabri:circularprogressbar:1.1.1'
 ```
 
 XML

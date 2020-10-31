@@ -16,7 +16,7 @@ import android.widget.TextView
 import kotlin.math.*
 
 
-class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
+open class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
 
     companion object {
         private const val DEFAULT_MAX_VALUE = 100f
@@ -42,7 +42,7 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
     //region Attributes
     var progress: Float = 0f
         set(value) {
-            field = if (progress <= progressMax) value else progressMax
+            field = if (value <= progressMax) value else progressMax
             progressChangeListeners.forEach { it.invoke(field) }
             invalidate()
         }
@@ -203,11 +203,7 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
     var percentShapeViewSize: Float = resources.getDimension(R.dimen.default_percent_shape_size)
         set(value) {
             field = value.dpToPx()
-            percentShapeView?.let { view ->
-                val spec = MeasureSpec.makeMeasureSpec(percentShapeViewSize.roundToInt(), EXACTLY)
-                view.measure(spec, spec)
-                view.layout(0, 0, view.measuredWidth, view.measuredHeight)
-            }
+            percentShapeView?.let { layoutAndMeasurePercentShape(it) }
             requestLayout()
             invalidate()
         }
@@ -278,16 +274,23 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
         percentShapeViewSize = attributes.getDimension(R.styleable.CircularProgressBar_cpb_percent_shape_size, percentShapeViewSize).pxToDp()
         percentTextViewId = attributes.getResourceId(R.styleable.CircularProgressBar_cpb_percent_text_view_id, 0)
 
-        progressChangeListeners.add{
-            percentTextView?.text = it.toInt().toString()
-            percentShapeView?.let { view ->
-                val spec = MeasureSpec.makeMeasureSpec(percentShapeViewSize.roundToInt(), EXACTLY)
-                view.measure(spec, spec)
-                view.layout(0, 0, view.measuredWidth, view.measuredHeight)
-            }
-        }
+        progressChangeListeners.add { progressChanged(it) }
+        progressChanged(progress)
 
         attributes.recycle()
+    }
+
+    private fun progressChanged(it: Float) {
+        percentTextView?.text = it.toInt().toString()
+        percentShapeView?.let { view ->
+            layoutAndMeasurePercentShape(view)
+        }
+    }
+
+    private fun layoutAndMeasurePercentShape(view: View) {
+        val spec = MeasureSpec.makeMeasureSpec(percentShapeViewSize.roundToInt(), EXACTLY)
+        view.measure(spec, spec)
+        view.layout(0, 0, view.measuredWidth, view.measuredHeight)
     }
 
     override fun onDetachedFromWindow() {
