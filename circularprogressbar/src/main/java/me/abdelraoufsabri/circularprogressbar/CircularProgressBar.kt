@@ -42,7 +42,7 @@ open class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : 
     //region Attributes
     var progress: Float = 0f
         set(value) {
-            field = if (value <= progressMax) value else progressMax
+            field = if (abs(value) <= progressMax) abs(value) else progressMax
             progressChangeListeners.forEach { it.invoke(field) }
             invalidate()
         }
