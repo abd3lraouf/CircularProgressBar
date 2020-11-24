@@ -8,6 +8,8 @@ import android.graphics.*
 import android.graphics.Paint.Style
 import android.os.Handler
 import android.os.Looper
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -278,6 +280,7 @@ open class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : 
         progressChanged(progress)
 
         attributes.recycle()
+        isSaveEnabled = true
     }
 
     private fun progressChanged(it: Float) {
@@ -470,4 +473,19 @@ open class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : 
         BOTTOM_TO_END(4)
     }
 
+    override fun onSaveInstanceState(): Parcelable? {
+        val superState = super.onSaveInstanceState()
+        val savedState = SavedState(superState)
+        savedState.progress = this.progress
+        savedState.progressMax = this.progressMax
+        return savedState
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        state as SavedState
+        super.onRestoreInstanceState(state.superState)
+        this.progress = state.progress
+        this.progressMax = state.progressMax
+        invalidate()
+    }
 }

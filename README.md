@@ -3,7 +3,7 @@
 CircularProgressBar
 =================
 
-<img src="/preview/preview.gif" alt="sample" title="sample" width="300" align="right" vspace="24" />
+<img src="https://media.giphy.com/media/yfKG6ljaaFt32BiAXk/giphy.gif" alt="sample" title="sample" width="300" align="right" vspace="24" />
 
 [![Platform](https://img.shields.io/badge/platform-android-green.svg)](http://developer.android.com/index.html)
 [![API](https://img.shields.io/badge/API-14%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=14)
@@ -19,7 +19,7 @@ USAGE
 To make a circular ProgressBar add CircularProgressBar in your layout XML and add CircularProgressBar library in your project or you can also grab it via Gradle:
 
 ```groovy
-implementation 'me.abdelraoufsabri:circularprogressbar:1.1.2'
+implementation 'me.abdelraoufsabri:circularprogressbar:1.1.3'
 ```
 
 XML

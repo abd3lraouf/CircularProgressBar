@@ -22,6 +22,7 @@
             app:cpb_background_progressbar_width="10dp"
             app:cpb_percent_shape="@layout/custom_layout"
             app:cpb_percent_shape_size="40dp"
+            app:cpb_percent_shape_enabled="true"
             app:cpb_percent_text_view_id="@id/number"
             app:cpb_progress_direction="to_right"
             app:cpb_progressbar_color="@color/primary"
@@ -48,7 +49,7 @@
                 android:max="100"
                 android:maxHeight="20dp"
                 android:minHeight="20dp"
-                android:progress="65" />
+                android:progress="0" />
 
             <SeekBar
                 android:id="@+id/seekBarStartAngle"
@@ -194,6 +195,7 @@
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switchPercentShape"
                     android:layout_width="wrap_content"
+                    android:checked="true"
                     android:layout_height="wrap_content" />
 
             </LinearLayout>
@@ -206,7 +208,7 @@
                 android:maxHeight="20dp"
                 android:minHeight="20dp"
                 android:progress="40"
-                android:visibility="gone" />
+                />
 
         </LinearLayout>
 
